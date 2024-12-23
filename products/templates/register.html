@@ -1,0 +1,47 @@
+<!-- register.html -->
+
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body text-center">
+                        <h2 class="mb-4">注册</h2>
+                        {% if messages %}
+                            {% for message in messages %}
+                                <div class="alert alert-danger" role="alert">
+                                    {{ message }}
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                        <form method="post" class="mx-auto">
+                            {% csrf_token %}
+                            <div class="form-floating mb-3">
+                                <input type="text" class="form-control" id="{{ form.username.id_for_label }}" name="{{ form.username.name }}" placeholder="用户名">
+                                <label for="{{ form.username.id_for_label }}">用户名</label>
+                            </div>
+                            <div class="form-floating mb-3">
+                                <input type="email" class="form-control" id="{{ form.email.id_for_label }}" name="{{ form.email.name }}" placeholder="name@example.com">
+                                <label for="{{ form.email.id_for_label }}">邮箱</label>
+                            </div>
+                            <div class="form-floating mb-3">
+                                <input type="password" class="form-control" id="{{ form.password1.id_for_label }}" name="{{ form.password1.name }}" placeholder="密码">
+                                <label for="{{ form.password1.id_for_label }}">密码</label>
+                            </div>
+                            <div class="form-floating mb-3">
+                                <input type="password" class="form-control" id="{{ form.password2.id_for_label }}" name="{{ form.password2.name }}" placeholder="确认密码">
+                                <label for="{{ form.password2.id_for_label }}">确认密码</label>
+                            </div>
+                            <div class="text-center">
+                                <button type="submit" class="btn btn-primary">注册</button>
+                                <a href="{% url 'login' %}" class="login-link btn btn-primary" style="color: white; text-decoration: none;"> 已有账号？登录</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

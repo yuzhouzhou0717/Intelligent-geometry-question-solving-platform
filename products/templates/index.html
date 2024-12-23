@@ -1,0 +1,161 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <style>
+        .abd {
+            /*border: 2px solid #3498db;*/
+            padding: 20px;
+        }
+
+
+        .yyy {
+            position: relative;
+        }
+
+        .card-buttons {
+            position: absolute;
+            bottom: 20px;
+            right: 40px;
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .card-title {
+            position: absolute;
+            top: 20px;
+            left: 10px;
+        }
+
+        .card-text {
+            position: absolute;
+            top: 21px;
+            left: 60px;
+            width: 80%;
+            word-break: break-all;
+        }
+
+
+        .card-img-top {
+            position: absolute;
+            top: 100px;
+            left: 35px;
+        }
+    </style>
+
+    <div class="container-fluid abd">
+        <div class="row">
+            {% for product in products %}
+                <div class="col-md-4"> <!-- 使用 col-md-4 来实现一行三个，如果少于三个会自动换行 -->
+                    <div class="card container-fluid yyy qe" style="width: 25rem; height: 330px; margin-bottom: 20px;">
+                        <div class="card-body">
+                            <h5 class="card-title"><strong>{{ product.name }}:</strong></h5>
+                            <p class="card-text qe">{{ product.stem }}</p>
+                            <img src="/media/{{ product.image }}" class="card-img-top" alt="card image"
+                                 style="max-width: 50%; max-height: 50%;">
+                            <div class="card-buttons">
+                                <a class="btn btn-primary" href="#"
+                                   onclick="copyToSecondDatabase({{ product.id }})"
+                                   style="color: white; text-decoration: none;">选择</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+<!-- 登录模态框 -->
+    <div id="loginModal" class="modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">登录</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <!-- 登录表单 -->
+                    <form method="post" class="mx-auto">
+                            {% csrf_token %}
+                            <div class="form-floating mb-3">
+                                <input type="text" class="form-control" id="{{ form.username.id_for_label }}"
+                                       name="{{ form.username.name }}" value=""
+                                       placeholder="Username">
+                                <label for="{{ form.username.id_for_label }}">用户名</label>
+                            </div>
+                            <div class="form-floating mb-3">
+                                <input type="password" class="form-control" id="{{ form.password.id_for_label }}"
+                                       name="{{ form.password.name }}" placeholder="Password">
+                                <label for="{{ form.password.id_for_label }}">密码</label>
+                            </div>
+
+                            <div class="text-center">
+                                <button type="submit" class="btn btn-primary">登录</button>
+                                <a href="" class="btn btn-primary">忘记密码</a>
+
+
+                            </div>
+                            &nbsp
+
+                        </form>
+
+
+                </div>
+                <div class="modal-footer">
+                    <a href="{% url 'register' %}" class="register-link"
+                                    style="color: white; text-decoration: none;"><button class="btn btn-primary">还没有账号？注册</button></a>
+                    <button type="submit" class="btn btn-primary">登录</button>
+                </div>
+            </div>
+        </div>
+    </div>
+     <script>
+                                    function copyToSecondDatabase(productId) {
+                                        const isAuthenticated = {% if user.is_authenticated %}true{% else %}
+                                            false{% endif %};
+
+                                        if (!isAuthenticated) {
+                                            // If not authenticated, prompt the user to log in
+                                            $('#loginModal').modal('show'); // 显示登录模态框
+                                            return;
+                                        }
+
+                                        // 防止链接的默认行为（跳转）
+                                        event.preventDefault();
+
+                                        // 发送异步请求
+                                        fetch(`/products/copy_data/${productId}/`, {
+                                            method: 'POST',
+                                            headers: {
+                                                'Content-Type': 'application/json',
+                                                'X-CSRFToken': getCookie('csrftoken'), // Ensure to include CSRF token
+                                            },
+                                            body: JSON.stringify({}),
+                                        })
+                                            .then(response => response.json())
+                                            .then(data => {
+                                                alert(data.message);
+                                            })
+                                            .catch(error => {
+                                                console.error('Error:', error);
+                                            });
+                                    }
+
+                                    // 获取 CSRF token 的函数
+                                    function getCookie(name) {
+                                        var cookieValue = null;
+                                        if (document.cookie && document.cookie !== '') {
+                                            var cookies = document.cookie.split(';');
+                                            for (var i = 0; i < cookies.length; i++) {
+                                                var cookie = cookies[i].trim();
+                                                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                                                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                                                    break;
+                                                }
+                                            }
+                                        }
+                                        return cookieValue;
+                                    }
+                                </script>
+{% endblock %}

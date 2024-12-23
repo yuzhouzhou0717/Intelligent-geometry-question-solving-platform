@@ -1,0 +1,137 @@
+<!-- search_results.html -->
+{% extends 'base.html' %}
+{% block content %}
+    <style>
+        .abd {
+            /*border: 2px solid #3498db;*/
+            padding: 20px;
+        }
+
+        .yyy {
+            position: relative;
+        }
+
+        .card-buttons {
+            position: absolute;
+            bottom: 20px;
+            right: 40px;
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .yz {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: #ffffff; /* 设置背景色，可根据需要调整 */
+            padding: 10px; /* 设置内边距，可根据需要调整 */
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .yz button {
+            margin-right: 99px; /* 调整按钮的右外边距 */
+        }
+
+        .card-title {
+            position: absolute;
+            top: 20px;
+            left: 10px;
+        }
+
+        .card-text {
+            position: absolute;
+            top: 20px;
+            left: 70px;
+            width: 80%;
+        }
+
+        .card-img-top {
+            position: absolute;
+            top: 100px;
+            left: 35px;
+        }
+    </style>
+
+    <div class="container-fluid abd">
+        <div class="row">
+            {% for result in results %}
+               <div class="col-md-4">
+                    <div class="card container-fluid yyy" style="width: 25rem;height: 330px;margin-bottom: 20px;">
+                        <div class="card-body">
+                            <h5 class="card-title"><strong>{{ result.name }}:</strong></h5>
+                            <p class="card-text">{{ result.stem }}</p>
+                            <img src="/media/{{ result.image }}" class="card-img-top" alt="card image"
+                                 style="max-width: 50%; max-height: 50%;">
+                            <div class="card-buttons">
+                                <a class="btn btn-primary" href=""
+                                   onclick="copyToSecondDatabase({{ result.id }})"
+                                   style="color: white; text-decoration: none;">选择</a>
+
+                                <script>
+                                    function copyToSecondDatabase(productId) {
+                                        const isAuthenticated = {% if user.is_authenticated %}true{% else %}
+                                            false{% endif %};
+
+                                        if (!isAuthenticated) {
+                                            // If not authenticated, prompt the user to log in
+                                            alert('请先登录！');
+                                            return;
+                                        }
+                                        // 防止链接的默认行为（跳转）
+                                        event.preventDefault();
+
+                                        // 发送异步请求
+                                        fetch(`/products/copy_data/${productId}/`, {
+                                            method: 'POST',
+                                            headers: {
+                                                'Content-Type': 'application/json',
+                                                'X-CSRFToken': getCookie('csrftoken'), // Ensure to include CSRF token
+                                            },
+                                            body: JSON.stringify({}),
+                                        })
+                                            .then(response => response.json())
+                                            .then(data => {
+                                                alert(data.message);
+                                            })
+                                            .catch(error => {
+                                                console.error('Error:', error);
+                                            });
+                                    }
+
+                                    // 获取 CSRF token 的函数
+                                    function getCookie(name) {
+                                        var cookieValue = null;
+                                        if (document.cookie && document.cookie !== '') {
+                                            var cookies = document.cookie.split(';');
+                                            for (var i = 0; i < cookies.length; i++) {
+                                                var cookie = cookies[i].trim();
+                                                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                                                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                                                    break;
+                                                }
+                                            }
+                                        }
+                                        return cookieValue;
+                                    }
+                                </script>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
+{% block content1 %}
+    <div class="abd yz">
+
+
+        <form action="{% url 'search' %}" method="get" class="d-inline">
+            <input type="hidden" name="q" value="{{ query }}">
+            <button type="submit" class="btn btn-primary">重新检索</button>
+        </form>
+    </div>
+{% endblock %}

@@ -1,0 +1,17 @@
+任务： 截止放假前
+1. 安装mathematica     激活   MatheMatica12_0\Keygen
+下载地址，百度网盘：https://pan.baidu.com/s/18qhkP7sRONUjw0x_ZpLFbQ 
+提取码：aqaz 
+
+2. 调试程序，和网页程序集成。出图功能能够完全自动化跑起来。
+
+3. 在github 上建立一个仓库， 上传集成后的代码代码。
+
+放假后：
+优化出题功能
+习题质量筛选
+习题题干润色
+
+
+
+

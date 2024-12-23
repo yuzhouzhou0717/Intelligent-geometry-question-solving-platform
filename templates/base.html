@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>智能化自动出题平台</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <style>
+        .search-form {
+            /* 调整搜索框宽度 */
+            width: 400px;
+        }
+
+        .sticky-top {
+            background-color: #ffffff; /* 导航栏的背景色 */
+            border-bottom: 1px solid #dddddd; /* 导航栏底部的边框 */
+            z-index: 1000; /* 确保导航栏在其他元素之上 */
+        }
+
+        /* 非固定状态下的导航栏样式 */
+        .navbar {
+            transition: background-color 0.3s ease; /* 添加平滑过渡效果 */
+        }
+    </style>
+</head>
+<body>
+<!-- As a link -->
+<nav class="navbar navbar-expand-lg bg-body-tertiary sticky-top">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="{% url 'home' %}">智能化自动出题</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page"
+                       href="{% url 'home' %}">种子题目</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page"
+                       href="{% url 'cart' %}">自动出题</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="{% url 'test' %}">新习题</a>
+                </li>
+
+                <li class="nav-item dropdown">
+                    {% if request.user.is_authenticated %}
+                        <a href="" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"
+                           aria-expanded="false">{{ request.user.username }}</a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="{% url 'user_profile' %}">我的</a></li>
+                            <li><a class="dropdown-item" href="#">收件箱</a></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="dropdown-item" href="{% url 'logout' %}">退出登录</a></li>
+                        <li><a class="dropdown-item" aria-current="page" href="{% url 'login' %}">登录/注册</a></li>
+                        </ul>
+                    {% endif %}
+
+                </li>
+            </ul>
+        <div>
+            <form class="d-flex" role="search" method="get" action="{% url 'search' %}">
+                <input class="form-control me-2 search-form" type="search" name="q" placeholder="输入关键字搜索题目"
+                       aria-label="Search">
+                <button class="btn btn-outline-success" type="submit">Search</button>
+
+            </form>
+            </div>
+         <div class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="{% url 'login' %}">你好，请登录</a>
+
+         </div>
+
+        </div>
+    </div>
+</nav>
+
+<div class="container">
+    {% block content %}
+    {% endblock %}
+</div>
+<div class="container">
+    {% block content1 %}
+    {% endblock %}
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+        crossorigin="anonymous"></script>
+</body>
+</html>

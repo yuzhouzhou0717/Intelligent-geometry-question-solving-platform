@@ -1,0 +1,39 @@
+<!-- user_profile.html -->
+{% extends 'base.html' %}
+
+{% block content %}
+    <style>
+    .abd {
+        border: 2px solid #3498db;
+        padding: 20px;
+    }
+</style>
+    <div class="container mt-5 ">
+        <div class="row justify-content-center ">
+            <div class="col-md-6 ">
+                <div class="card ">
+                    <div class="card-body">
+                        <h4 class="mb-4 ">我的信息：</h4>
+                        <div class="mb-3 text-center">
+                            <label for="" class="form-label mb-0">用户名：</label>
+                            {{ user.username }}&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+                            </div>
+                        </div>
+                        <div class="mb-3  text-center">
+                             <label for="" class="form-label mb-0">&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp邮箱：</label>
+                            {{ user.email }}
+                        </div>
+                     <div class="mb-3  text-center">
+                                <button class="btn btn-primary">
+                                    <a href="{% url 'password_change' %}" class="register-link" style="color: white; text-decoration: none;">修改密码</a>
+                                </button>&nbsp&nbsp&nbsp
+                                <button class="btn btn-primary">
+                                    <a href="" class="register-link" style="color: white; text-decoration: none;">编辑个人信息</a>
+                                </button>
+                            </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

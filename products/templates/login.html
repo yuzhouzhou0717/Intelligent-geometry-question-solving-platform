@@ -1,0 +1,49 @@
+<!-- login.html -->
+
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body text-center">
+                        <h2 class="mb-4">登录</h2>
+                        {% if messages %}
+                            {% for message in messages %}
+                                <div class="alert alert-danger" role="alert">
+                                    {{ message }}
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                        <form method="post" class="mx-auto">
+                            {% csrf_token %}
+                            <div class="form-floating mb-3">
+                                <input type="text" class="form-control" id="{{ form.username.id_for_label }}"
+                                       name="{{ form.username.name }}" value=""
+                                       placeholder="Username">
+                                <label for="{{ form.username.id_for_label }}">用户名</label>
+                            </div>
+                            <div class="form-floating mb-3">
+                                <input type="password" class="form-control" id="{{ form.password.id_for_label }}"
+                                       name="{{ form.password.name }}" placeholder="Password">
+                                <label for="{{ form.password.id_for_label }}">密码</label>
+                            </div>
+
+                            <div class="text-center">
+                                <button type="submit" class="btn btn-primary">登录</button>
+                                <a href="" class="btn btn-primary">忘记密码</a>
+
+
+                            </div>
+                            &nbsp
+                            <div><a href="{% url 'register' %}" class="register-link btn btn-primary"
+                                    style="color: white; text-decoration: none;">还没有账号？注册</a></div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

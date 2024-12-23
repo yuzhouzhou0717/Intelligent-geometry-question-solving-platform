@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <style>
+        .abd {
+            /*border: 2px solid #3498db;*/
+            padding: 20px;
+            max-width: 100%; /* 设置最大宽度为 100% */
+        }
+
+        .yyy {
+            position: relative;
+            display: inline-block; /* 使用 inline-block 使 div 根据内容调整大小 */
+        }
+
+        .card-buttons {
+            position: absolute;
+            bottom: 20px;
+            right: 40px;
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+    </style>
+
+    <div class="container-fluid abd">
+        <div class="row">
+            <div class="col">
+                <div class="card container-fluid yyy " style="width: 75rem;margin-bottom: 20px;">
+                    <div class="card-body">
+                        <h5 class="card-title"><strong>{{ product.name }}:</strong></h5>
+                        <p class="card-text">{{ product.PRICE }}</p>
+                        <img src="{{ product.image_url }}" class="card-img-top" alt="card image" style="width: 15rem;">
+                        <h4 class="card-text ">{{ product.stock }}</h4>
+
+                        <div class="card-buttons ">
+                            <button onclick="window.location.href='{% url 'home' %}'" class="btn btn-primary">返回主页
+                            </button>
+                            <a class="btn btn-primary" href="#" onclick="copyToSecondDatabase({{ product.id }})"
+                                                               style="color: white; text-decoration: none;">添加到出题库</a>
+                            <script>
+                                function copyToSecondDatabase(productId) {
+                                    const isAuthenticated = {% if user.is_authenticated %}true{% else %}false{% endif %};
+
+        if (!isAuthenticated) {
+            // If not authenticated, prompt the user to log in
+            alert('请先登录！');
+            return;
+        }
+                                    // 防止链接的默认行为（跳转）
+                                    event.preventDefault();
+
+                                    // 发送异步请求
+                                    fetch(`/products/copy_data/${productId}/`, {
+                                        method: 'POST',
+                                        headers: {
+                                            'Content-Type': 'application/json',
+                                            'X-CSRFToken': getCookie('csrftoken'), // Ensure to include CSRF token
+                                        },
+                                        body: JSON.stringify({}),
+                                    })
+                                        .then(response => response.json())
+                                        .then(data => {
+                                            alert(data.message);
+                                        })
+                                        .catch(error => {
+                                            console.error('Error:', error);
+                                        });
+                                }
+
+                                // 获取 CSRF token 的函数
+                                function getCookie(name) {
+                                    var cookieValue = null;
+                                    if (document.cookie && document.cookie !== '') {
+                                        var cookies = document.cookie.split(';');
+                                        for (var i = 0; i < cookies.length; i++) {
+                                            var cookie = cookies[i].trim();
+                                            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                                                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                                                break;
+                                            }
+                                        }
+                                    }
+                                    return cookieValue;
+                                }
+                            </script>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="form-floating">
+        <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea"></textarea>
+        <label for="floatingTextarea">留言</label>
+    </div>
+    <div>
+        <button class="btn btn-primary mt-3" onclick="">提交留言</button>
+    </div>
+{% endblock %}
